@@ -1,0 +1,61 @@
+{
+	"name": "@alanscodelog/vite-config",
+	"version": "0.0.0",
+	"description": "",
+	"type": "module",
+	"module": "dist/defineConfig.js",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/defineConfig.d.ts",
+			"import": "./dist/defineConfig.js"
+		}
+	},
+	"scripts": {
+		"play": "cd playground && vite build",
+		"build": "vite build",
+		"lint": "pnpm run lint:types",
+		"lint:types": "tsc --noEmit --pretty",
+		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
+		"test": "echo no tests"
+	},
+	"files": [
+		"src",
+		"package.json",
+		"README.md"
+	],
+	"dependencies": {
+		"@alanscodelog/commitlint-config": "^3.0.2",
+		"@alanscodelog/semantic-release-config": "^5.0.1",
+		"@alanscodelog/tsconfigs": "^4.0.1",
+		"@alanscodelog/utils": "^4.1.1",
+		"defu": "^6.1.4",
+		"fast-glob": "^3.3.2",
+		"semantic-release": "^24.0.0",
+		"vite": "^5.4.8",
+		"vite-plugin-externalize-deps": "^0.8.0",
+		"vitest": "^2.1.2"
+	},
+	"devDependencies": {
+		"@types/node": "^22.7.4"
+	},
+	"release": {
+		"extends": [
+			"@alanscodelog/semantic-release-config"
+		]
+	},
+	"commitlint": {
+		"extends": [
+			"@alanscodelog"
+		]
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"author": "Alan <alanscodelog@gmail.com>",
+	"repository": "https://github.com/alanscodelog/vite-config",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	}
+}

@@ -1,0 +1,48 @@
+name: Release
+
+env:
+  USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+  ENABLE_RELEASE: ${{ secrets.ENABLE_RELEASE }}
+
+on:
+  push:
+    branches: [ master, alpha, beta, build ]
+  repository_dispatch:
+    types: [ release ]
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-build.yml
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! contains(toJSON(github.event.commits.*.message), '(no-release)')"
+    secrets: inherit
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["lts/*"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: ./.github/actions/composite-setup
+      with:
+        USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+
+    - name: Release
+      if: "env.ENABLE_RELEASE == 'true' && ! contains('refs/heads/build ', github.ref)"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: pnpm semantic-release
+
+    - name: Release Dry Run
+      if: "env.ENABLE_RELEASE != 'true' || ! contains('refs/heads/build ', github.ref)"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: pnpm semantic-release --dry-run 
+
+    - run: echo "env.ENABLE_RELEASE is ${{ env.ENABLE_RELEASE == 'true' }} and branch is ${{ github.ref }}, no release can be published." && exit 1
+      if: "env.ENABLE_RELEASE != 'true' || ! contains('refs/heads/build ', github.ref)"

@@ -1,0 +1,11 @@
+{
+	"name": "@alanscodelog/vite-config-playground",
+	"version": "0.0.0",
+	"description": "",
+	"type": "module",
+	"license": "MIT",
+	"sideEffects": false,
+	"scripts": {
+		"build": "vite build"
+	}
+}
