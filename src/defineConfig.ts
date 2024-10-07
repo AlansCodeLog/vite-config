@@ -4,6 +4,7 @@ import glob from "fast-glob"
 import path from "path"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 import type { PluginOption } from "vite";
+import { configDefaults as vitestDefaults } from 'vitest/config';
 
 type VitestConfigOptions = Parameters<typeof defineVitestConfig>[0]
 
@@ -100,6 +101,11 @@ export const defineConfig = (
 		},
 		test: {
 			cache: process.env.CI ? false : undefined,
+			exclude: [
+				...vitestDefaults.exclude,
+				// for nix devenv
+				".direnv/**/*"
+			]
 		},
 	}
 
