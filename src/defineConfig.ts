@@ -13,26 +13,31 @@ type TypePluginOptions = {
 	dtsGenerator?: string,
 	additionalArgs?: string,
 	rootDir?: string,
-	/** Use a typescript project file to generate types.
-	 *
-	 * No additional flags except `--emitDeclarationOnly --declaration --declarationMap` will be passed.
-	 */
+	/** The typescript project file to generate types.
+		* @default tsconfig.types.json
+		*/
 	project?: string,
+	/**
+	 * By default the following flags are passed:
+	 *
+	 * @default --emitDeclarationOnly --declaration --declarationMap --outDir {outDir} --rootDir {rootDir} --noEmit false --allowJs false --skip
+	 */
+	noFlags?: boolean,
 }
 
 /**
  * Generates types for the project.
  *
- * By default sets the outDir to the vite output directory and uses `src` as the root directory (Careful, if it's changed via vite, it cannot detect it!).
+ * By default sets the outDir to the vite output directory and uses `src` as the root directory (careful, if it's changed via vite, it cannot detect it!).
  *
- * Also passes the flags `--noEmit false --allowJs false --skipLibCheck --removeComments false` unless a project is specified.
- *
+ * Passes several flags related to type declaration, see {@link TypePluginOptions.noFlags} for more info.
  */
 const typesPlugin = ({
 	dtsGenerator = "tsc",
 	rootDir = "src",
 	additionalArgs = "",
-		project = undefined ,
+	noFlags = false,
+	project = "tsconfig.types.json" ,
 }:TypePluginOptions = {}):PluginOption => ({
 	name: "typesPlugin",
 	writeBundle: async (options) => {
@@ -40,9 +45,12 @@ const typesPlugin = ({
 		if (!outDir) {
 			throw new Error("outDir is not defined")
 		}
-		const finalArgs =  "--emitDeclarationOnly --declaration --declarationMap " + (project 
-		? `-p ${project}` 
-		: [
+		const finalArgs = 
+		(project 
+			? `-p ${project}` 
+			: ""
+		) + " " + (noFlags ? "" : [
+			`--emitDeclarationOnly`,`--declaration`,`--declarationMap`,
 			`--outDir ${outDir}`,
 			`--rootDir ${rootDir}`,
 			`--noEmit false`,
