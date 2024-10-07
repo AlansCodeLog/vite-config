@@ -3,8 +3,9 @@ import { defineConfig as defineVitestConfig } from "vitest/config";
 import glob from "fast-glob"
 import path from "path"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
-import type { PluginOption, UserConfig } from "vite";
+import type { PluginOption } from "vite";
 
+type VitestConfigOptions = Parameters<typeof defineVitestConfig>[0]
 
 import { run } from "@alanscodelog/utils/run.js"
 type ExternalizeDepsOptions = Parameters<typeof externalizeDeps>[0]
@@ -73,9 +74,9 @@ export const defineConfig = (
 		}>,
 		debug?: boolean
 	}>,
-	overrideConfig?: UserConfig
+	overrideConfig?: VitestConfigOptions 
 ) =>   {
-	const baseConfig: UserConfig = {
+	const baseConfig: VitestConfigOptions = {
 		plugins: [
 			// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
 			externalizeDeps(opts?.pluginOpts?.externalizeDeps),
