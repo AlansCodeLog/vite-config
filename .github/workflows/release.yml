@@ -11,13 +11,7 @@ on:
     types: [ release ]
 
 jobs:
-  build:
-    uses: ./.github/workflows/reusable-build.yml
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! contains(toJSON(github.event.commits.*.message), '(no-release)')"
-    secrets: inherit
-
   release:
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,9 +20,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: ./.github/actions/composite-setup
+    - name: Setup
+      uses: ./.github/actions/composite-setup
       with:
         USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+
+    - name: Build 
+      uses: ./.github/actions/composite-build
+      with:
+        USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+
 
     - name: Release
       if: "env.ENABLE_RELEASE == 'true' && ! contains('refs/heads/build ', github.ref)"
