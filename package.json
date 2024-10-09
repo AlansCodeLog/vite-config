@@ -3,7 +3,7 @@
 	"version": "0.0.3",
 	"description": "",
 	"type": "module",
-	"module": "dist/defineConfig.js",
+	"main": "dist/defineConfig.js",
 	"sideEffects": false,
 	"exports": {
 		".": {
