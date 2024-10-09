@@ -5,10 +5,10 @@ import path from "path"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 import type { PluginOption } from "vite";
 import { configDefaults as vitestDefaults } from 'vitest/config';
+import { spawn } from 'child_process';
 
 type VitestConfigOptions = Parameters<typeof defineVitestConfig>[0]
 
-import { run } from "@alanscodelog/utils/run.js"
 type ExternalizeDepsOptions = Parameters<typeof externalizeDeps>[0]
 
 type TypePluginOptions = {
@@ -62,8 +62,20 @@ const typesPlugin = ({
 			`--removeComments false`,
 		].join(" "))
 		+ " " + additionalArgs
-		const fullCommand = `${dtsGenerator} ${finalArgs}`
-		await run(fullCommand, {stdio: "inherit"}).promise.catch(() => { process.exit(1) })
+		await (async () => {
+		const args = finalArgs.split(" ")
+			const child = spawn(dtsGenerator, args, { shell: true, stdio: "inherit", })
+			
+			const code: number = await new Promise(resolve => {
+				child.on("close", err => {
+					resolve(err ?? 0)
+				})
+				child.on("exit", err => {
+					resolve(err ?? 0)
+				})
+			})
+		})().catch(() => { process.exit(1) })
+
 	},
 })
 

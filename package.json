@@ -29,7 +29,6 @@
 		"@alanscodelog/commitlint-config": "^3.0.2",
 		"@alanscodelog/semantic-release-config": "^5.0.1",
 		"@alanscodelog/tsconfigs": "^5.0.0",
-		"@alanscodelog/utils": "^4.1.1",
 		"defu": "^6.1.4",
 		"fast-glob": "^3.3.2",
 		"semantic-release": "^24.0.0",
