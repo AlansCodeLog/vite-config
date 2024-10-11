@@ -1,6 +1,7 @@
-import { defu } from 'defu';
+import { createDefu, defu } from 'defu';
+import {inspect} from 'util'
 import { defineConfig as defineVitestConfig } from "vitest/config";
-import glob from "fast-glob"
+import fastGlob from "fast-glob"
 import path from "path"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 import type { PluginOption } from "vite";
@@ -79,8 +80,25 @@ const typesPlugin = ({
 	},
 })
 
+function globsToEntries(globs: string[]) {
+	const include = globs.filter(g => !g.startsWith("!"))
+	const ignore = globs.filter(g => g.startsWith("!"))
+	const entries = fastGlob.globSync(include, {
+		onlyFiles: true,
+		ignore,
+		cwd: process.cwd(),
+	})
+	return entries
+}
+
 export const defineConfig = (
 	opts?: Partial<{
+		/**
+		 * Replaces the default entry globs with the ones specified. Globs should be relative to `process.cwd()`. 
+		 *
+		 * Globs starting with `!` will be added to ignore list instead.
+		 */
+		entryGlobs: string[]
 		pluginOpts: Partial<{
 			typesPlugin: TypePluginOptions
 			externalizeDeps: ExternalizeDepsOptions
@@ -89,6 +107,7 @@ export const defineConfig = (
 	}>,
 	overrideConfig?: VitestConfigOptions 
 ) =>   {
+) => {
 	const baseConfig: VitestConfigOptions = {
 		plugins: [
 			// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
@@ -98,9 +117,9 @@ export const defineConfig = (
 		build: {
 			outDir: "dist",
 			lib: {
-				entry: glob.sync([
-					path.resolve(process.cwd(), "src/**/*.ts"),
-				]),
+				entry: opts?.entryGlobs
+				? globsToEntries(opts.entryGlobs)
+				: globsToEntries(["src/**/*.ts"]),
 				formats: ["es"],
 			},
 			rollupOptions: {
