@@ -105,8 +105,8 @@ export const defineConfig = (
 		}>,
 		debug?: boolean | ((config: VitestConfigOptions) => void)
 	}>,
-	overrideConfig?: VitestConfigOptions 
-) =>   {
+	mergeConfig?: Awaited<VitestConfigOptions>,
+	overrideConfig?: Awaited<VitestConfigOptions>,
 ) => {
 	const baseConfig: VitestConfigOptions = {
 		plugins: [
@@ -140,10 +140,21 @@ export const defineConfig = (
 		},
 	}
 
-	const config =	defineVitestConfig(defu(
+	const overrider = createDefu((obj, key, value) => {
+		const val = obj[key]
+		if (typeof val!== "object" || Array.isArray(val)) {
+			obj[key] = value;
+			return true;
+		}
+		return false
+	});
+	const config =	overrider(
 		overrideConfig as any,
-		baseConfig
-	))
+		defineVitestConfig(
+			defu(mergeConfig as any, baseConfig)
+		)
+	)
+
 	if (opts?.debug) {
 		if (typeof opts.debug === "boolean") {
 		console.log(inspect(config, false, 5, true))
