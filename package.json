@@ -14,7 +14,7 @@
 	"scripts": {
 		"play": "cd playground && vite build",
 		"build": "vite build",
-		"lint": "pnpm run lint:types",
+		"lint": "pnpm lint:types",
 		"lint:types": "tsc --noEmit --pretty",
 		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"test": "echo no tests"
