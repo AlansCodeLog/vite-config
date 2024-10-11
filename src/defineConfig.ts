@@ -103,7 +103,7 @@ export const defineConfig = (
 			typesPlugin: TypePluginOptions
 			externalizeDeps: ExternalizeDepsOptions
 		}>,
-		debug?: boolean
+		debug?: boolean | ((config: VitestConfigOptions) => void)
 	}>,
 	overrideConfig?: VitestConfigOptions 
 ) =>   {
@@ -145,7 +145,11 @@ export const defineConfig = (
 		baseConfig
 	))
 	if (opts?.debug) {
-		console.log(config)
+		if (typeof opts.debug === "boolean") {
+		console.log(inspect(config, false, 5, true))
+		} else if (typeof opts.debug === "function") {
+			console.log(opts.debug(config))
+		}
 	}
 	return config
 }
