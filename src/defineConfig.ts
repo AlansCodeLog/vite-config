@@ -107,7 +107,7 @@ export const defineConfig = (
 	}>,
 	mergeConfig?: Awaited<VitestConfigOptions>,
 	overrideConfig?: Awaited<VitestConfigOptions>,
-) => {
+) => ({mode}:{mode:string})=>{
 	const baseConfig: VitestConfigOptions = {
 		plugins: [
 			// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
@@ -129,6 +129,7 @@ export const defineConfig = (
 				},
 			},
 			minify: false,
+			emptyOutDir: mode === "production", // for dev hmr in monorepo
 		},
 		test: {
 			cache: process.env.CI ? false : undefined,
