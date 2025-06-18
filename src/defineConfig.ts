@@ -110,8 +110,8 @@ export const defineConfig = (
 	const baseConfig: VitestConfigOptions = {
 		plugins: [
 			// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
-			externalizeDeps(opts?.pluginOpts?.externalizeDeps),
-			typesPlugin(opts?.pluginOpts?.typesPlugin),
+			externalizeDeps(opts?.pluginOpts?.externalizeDeps) as any,
+			typesPlugin(opts?.pluginOpts?.typesPlugin) as any,
 		],
 		build: {
 			outDir: "dist",
