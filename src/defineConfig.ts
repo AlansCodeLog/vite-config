@@ -17,8 +17,8 @@ type TypePluginOptions = {
 	additionalArgs?: string,
 	rootDir?: string,
 	/** The typescript project file to generate types.
-		* @default tsconfig.types.json
-		*/
+	 * @default tsconfig.types.json
+	 */
 	project?: string,
 	/**
 	 * By default the following flags are passed:
@@ -48,23 +48,22 @@ const typesPlugin = ({
 		if (!outDir) {
 			throw new Error("outDir is not defined")
 		}
-		const finalArgs = 
-		(project 
-			? `-p ${project}` 
-			: ""
-		) + " " + (noFlags ? "" : [
-			`--emitDeclarationOnly`,`--declaration`,`--declarationMap`,
-			`--outDir ${outDir}`,
-			`--rootDir ${rootDir}`,
-			`--noEmit false`,
-			`--allowJs false`,
-			`--skipLibCheck`,
-			// preserve documentation
-			`--removeComments false`,
-		].join(" "))
-		+ " " + additionalArgs
+		const finalArgs = [
+			...(project ? [`-p ${project}`] : []),
+			...(noFlags ? [] : [
+				`--emitDeclarationOnly`,`--declaration`,`--declarationMap`,
+				`--outDir ${outDir}`,
+				`--rootDir ${rootDir}`,
+				`--noEmit false`,
+				`--allowJs false`,
+				`--skipLibCheck`,
+				// preserve documentation
+				`--removeComments false`,
+			]),
+			...(additionalArgs ? [additionalArgs] : [])
+		].join(" ")
 		await (async () => {
-		const args = finalArgs.split(" ")
+			const args = finalArgs.split(" ")
 			const child = spawn(dtsGenerator, args, { stdio: "inherit", })
 			
 			const code: number = await new Promise(resolve => {
