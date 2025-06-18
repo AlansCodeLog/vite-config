@@ -65,7 +65,7 @@ const typesPlugin = ({
 		+ " " + additionalArgs
 		await (async () => {
 		const args = finalArgs.split(" ")
-			const child = spawn(dtsGenerator, args, { shell: true, stdio: "inherit", })
+			const child = spawn(dtsGenerator, args, { stdio: "inherit", })
 			
 			const code: number = await new Promise(resolve => {
 				child.on("close", err => {
