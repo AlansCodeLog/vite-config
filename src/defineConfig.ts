@@ -28,8 +28,7 @@ type TypePluginOptions = {
 	noFlags?: boolean,
 }
 
-/**
- * Generates types for the project.
+/** Generates types for the project.
  *
  * By default sets the outDir to the vite output directory and uses `src` as the root directory (careful, if it's changed via vite, it cannot detect it!).
  *

@@ -14,7 +14,7 @@
 	"scripts": {
 		"play": "cd playground && vite build",
 		"build": "vite build",
-		"lint": "pnpm lint:types",
+		"lint": "pnpm lint:types && pnpm lint:commits",
 		"lint:types": "tsc --noEmit --pretty",
 		"lint:commits": "commitlint --from-last-tag --to HEAD --verbose",
 		"test": "echo no tests"
@@ -26,18 +26,19 @@
 		"README.md"
 	],
 	"dependencies": {
-		"@alanscodelog/commitlint-config": "^3.0.2",
-		"@alanscodelog/semantic-release-config": "^5.0.4",
-		"@alanscodelog/tsconfigs": "^6.0.0",
+		"@alanscodelog/commitlint-config": "^3.1.2",
+		"@alanscodelog/semantic-release-config": "^6.0.0",
+		"@alanscodelog/tsconfigs": "^6.2.0",
+		"@commitlint/cli": "^20.1.0",
 		"defu": "^6.1.4",
 		"fast-glob": "^3.3.3",
-		"vite": "^7.0.6",
-		"vite-plugin-externalize-deps": "^0.9.0",
-		"vitest": "^3.2.4"
+		"vite": "^7.2.4",
+		"vite-plugin-externalize-deps": "^0.10.0",
+		"vitest": "^4.0.14"
 	},
 	"devDependencies": {
-		"@types/node": "^24.1.0",
-		"semantic-release": "^24.2.7"
+		"@types/node": "^24.10.1",
+		"semantic-release": "^25.0.2"
 	},
 	"release": {
 		"extends": [
