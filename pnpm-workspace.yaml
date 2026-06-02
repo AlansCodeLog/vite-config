@@ -1,0 +1,10 @@
+allowBuilds:
+  '@alanscodelog/tsconfigs': false
+  esbuild: true
+
+strictPeerDependencies: false
+minimumReleaseAge: 20160
+blockExoticSubdeps: true
+minimumReleaseAgeExclude:
+  - "@alanscodelog/*"
+  - "@witchcraft/*"
